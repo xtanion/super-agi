@@ -2,16 +2,16 @@ import torch
 import torch.nn as nn
 from torch.nn import functional as F
 from rotary_embedding_torch import RotaryEmbedding
-from hyperparameters import *
+
 
 class Head(nn.Module):
 
-    def __init__(self, head_size, RoPE=False):
+    def __init__(self, head_size, n_embd, block_size, dropout, RoPE=False):
         super().__init__()
         self.key = nn.Linear(n_embd, head_size, bias=False)
         self.query = nn.Linear(n_embd, head_size, bias=False)
         self.value = nn.Linear(n_embd, head_size, bias=False)
-        self.register_buffer('tril', torch.tril(torch.ones(block_size, block_size)))
+        self.register_buffer('tril', torch.tril(torch.ones(block_size, block_size)))  # noqa
 
         self.dropout = nn.Dropout(dropout)
         self.rotary_emb = RotaryEmbedding(dim=head_size)
@@ -36,9 +36,9 @@ class Head(nn.Module):
 
 class MultiHeadAttention(nn.Module):
 
-    def __init__(self, num_heads, head_size):
+    def __init__(self, num_heads, head_size, n_embd, block_size, dropout):
         super().__init__()
-        self.heads = nn.ModuleList([Head(head_size) for _ in range(num_heads)])
+        self.heads = nn.ModuleList([Head(head_size, n_embd, block_size, dropout) for _ in range(num_heads)])  # noqa
         self.proj = nn.Linear(n_embd, n_embd)
         self.dropout = nn.Dropout(dropout)
 
