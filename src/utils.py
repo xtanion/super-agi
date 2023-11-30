@@ -20,7 +20,7 @@ def decode(l):
     return ''.join([itos[i] for i in l])
 
 
-def get_batch(split, data):
+def get_batch(split, data, block_size, batch_size, device='cpu'):
     text = get_data()
     data = torch.tensor(encode(text), dtype=torch.long)
     n = int(0.9*len(data))
@@ -32,6 +32,7 @@ def get_batch(split, data):
     y = torch.stack([data[i+1:i+block_size+1] for i in ix])
     x, y = x.to(device), y.to(device)
     return x, y
+
 
 @torch.no_grad()
 def estimate_loss():

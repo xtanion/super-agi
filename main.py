@@ -19,7 +19,8 @@ head_size = 16
 dropout = 0.2
 
 
-model = Transformer(vocab_size, )
+model = Transformer(vocab_size, n_embd, n_head, n_layer, block_size,
+                    device)
 m = model.to(device)  # running with CUDA
 print(sum(p.numel() for p in m.parameters())/1e6, 'M parameters')
 
